@@ -31,6 +31,8 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, NSFe
         tableView.delegate = self
         tableView.dataSource = self
         
+//        generateTestData()
+        attemptFetch()
         
     }
 
@@ -41,19 +43,49 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, NSFe
     // for now: "return UITableViewCell()"
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        return UITableViewCell()
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ItemCell", for: indexPath) as! ItemCell
+        configureCell(cell: cell, indexPath: indexPath as NSIndexPath)  // created configureCell func first, below
+        
+        return cell
+    }
+    
+    // secondary configure cell func (primary in ItemCell.swift)
+    func configureCell(cell: ItemCell, indexPath: NSIndexPath) {
+        
+        let item = controller.object(at: indexPath as IndexPath)
+        cell.configureCell(item: item)
+        
     }
 
     // for now: "return 0"
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        if let sections = controller.sections {
+            
+            let sectionInfo = sections[section]
+            return sectionInfo.numberOfObjects
+        }
         
         return 0
     }
     
     // for now: "return 0"
     func numberOfSections(in tableView: UITableView) -> Int {
+        
+        if let sections = controller.sections {
+            return sections.count
+        }
+        
         return 0
     }
+    
+    // for cell height
+    // type in to bring up auto complete... 'heightForRowAt'
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        
+        return 150  // checked height in storyboard
+    }
+    
     
     // once we have data in our database, we need a way to fetch it & display it
     func attemptFetch() {
@@ -71,6 +103,8 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, NSFe
         // instatiate the fetchResultController
         // note:  create shortcuts in AppDelegate.swift file, for 'managedObjectContext' ("context" shortcut)
         let controller = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+        
+        self.controller = controller
         
         // fetch request
         do {
@@ -97,7 +131,7 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, NSFe
         tableView.endUpdates()
     }
     
-    // type in to bring up autoComplete... "didChange anObject"
+    // type in to bring up auto complete... "didChange anObject"
     // command+click 'NSFetchedResultsChangeType' to see what kind of changes (insert, delete, move, update)
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         
@@ -123,6 +157,7 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, NSFe
             if let indexPath = indexPath {
                 let cell = tableView.cellForRow(at: indexPath) as! ItemCell
                 // update the cell data (later)
+                configureCell(cell: cell, indexPath: indexPath as NSIndexPath) // added after configureCell func was created
             }
             
             break
@@ -140,7 +175,26 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, NSFe
         
     }
     
-    
+    func generateTestData() {
+        
+        let item = Item(context: context)
+        item.title = "MacBook Pro"
+        item.price = 1800
+        item.details = "I can't wait until the September event, I hope they release new MBPs."
+        
+        let item2 = Item(context: context)
+        item2.title = "Bose Headphones"
+        item2.price = 300
+        item2.details = "But man, it's so nice to be able to block out everyone with the noise-cancelling tech."
+        
+        let item3 = Item(context: context)
+        item3.title = "Tesla Model S"
+        item3.price = 110000
+        item3.details = "Oh man this is a beautiful car. And one day I will own it."
+        
+        ad.saveContext()
+        
+    }
     
     
     

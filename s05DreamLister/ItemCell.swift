@@ -15,5 +15,13 @@ class ItemCell: UITableViewCell {
     @IBOutlet weak var price: UILabel!
     @IBOutlet weak var details: UILabel!
     
+    // primary configure cell func
+    func configureCell(item: Item) {
+        
+        title.text = item.title     // 'title' attribute in Item entity
+        price.text = "$\(item.price)"
+        details.text = item.details
+        
+    }
 
 }
