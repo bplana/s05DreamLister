@@ -104,6 +104,8 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, NSFe
         // note:  create shortcuts in AppDelegate.swift file, for 'managedObjectContext' ("context" shortcut)
         let controller = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
         
+        controller.delegate = self
+        
         self.controller = controller
         
         // fetch request

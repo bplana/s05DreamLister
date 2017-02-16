@@ -96,6 +96,57 @@ class ItemDetailsVC: UIViewController, UIPickerViewDataSource, UIPickerViewDeleg
             
         }
     }
+    
+    @IBAction func savePressed(_ sender: UIButton) {
+
+        // insert an entity into the NSManagedObjectContext
+        let item = Item(context: context)
+        
+
+        // not adding to many checks here... (for example, you may want to make sure the user is entering numbers for the price field)
+        
+        // assign the details from the Title/Price/Details fields to the attributues of that item, then save that to the database
+        if let title = titleField.text {
+            item.title = title
+        }
+        
+        if let price = priceField.text {
+            item.price = (price as NSString).doubleValue    // convert
+        }
+        
+        if let details = detailsField.text {
+            item.details = details
+        }
+        
+        // assign store that was selected
+        // ".toStore" -- check Relationship in Item Entity, in .xcdatamodeld file
+        // inComponent = row, we just have 1 row, so "0"
+        item.toStore = stores[storePicker.selectedRow(inComponent: 0)]
+        
+        // save it
+        ad.saveContext()
+        
+        // when Save button is pressed, go back to main View Controller
+        // "_ =" --> new syntax for pop...
+        _ = navigationController?.popViewController(animated: true)
+        
+        
+    }
+    
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
