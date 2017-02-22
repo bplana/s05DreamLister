@@ -56,6 +56,32 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, NSFe
         cell.configureCell(item: item)
         
     }
+    
+    // for editing an item - when an item is selected
+    // didSelectRowAt indexPath -- when someone clicks on an item in the tableView, this func is called
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        // make sure that there are objects in the result controller, and if there at least one of them
+        // "," used to be "where" (new syntax)
+        if let objs = controller.fetchedObjects , objs.count > 0 {
+            
+            let item = objs[indexPath.row]
+            performSegue(withIdentifier: "ItemDetailsVC", sender: item)
+        }
+    }
+    
+    // get ready to do the segue
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if segue.identifier == "ItemDetailsVC" {
+            if let destination = segue.destination as? ItemDetailsVC {
+                if let item = sender as? Item {
+                    destination.itemToEdit = item
+                }
+            }
+        }
+    }
+    
 
     // for now: "return 0"
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

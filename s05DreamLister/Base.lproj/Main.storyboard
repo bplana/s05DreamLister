@@ -39,7 +39,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ItemCell" rowHeight="150" id="HDv-Ra-0sc" customClass="ItemCell" customModule="s05DreamLister" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="ItemCell" rowHeight="150" id="HDv-Ra-0sc" customClass="ItemCell" customModule="s05DreamLister" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="343" height="150"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="HDv-Ra-0sc" id="BTg-Ry-cwc">
@@ -263,6 +263,9 @@
                     <navigationItem key="navigationItem" title="Add/Edit" id="gK9-W4-wkK">
                         <barButtonItem key="rightBarButtonItem" systemItem="trash" id="2Ze-D5-fK0">
                             <color key="tintColor" red="1" green="0.12642792319999999" blue="0.1052419347" alpha="1" colorSpace="calibratedRGB"/>
+                            <connections>
+                                <action selector="deletePressed:" destination="h1k-jQ-Npo" id="bZN-S1-A6z"/>
+                            </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
@@ -281,7 +284,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Dp8-ZB-PYz" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="Inn-es-QWM">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Inn-es-QWM">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>

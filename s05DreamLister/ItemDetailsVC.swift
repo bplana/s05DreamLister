@@ -19,6 +19,7 @@ class ItemDetailsVC: UIViewController, UIPickerViewDataSource, UIPickerViewDeleg
     @IBOutlet weak var detailsField: CustomTextField!
     
     var stores = [Store]()
+    var itemToEdit: Item?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,6 +50,10 @@ class ItemDetailsVC: UIViewController, UIPickerViewDataSource, UIPickerViewDeleg
 //        
 //        ad.saveContext()    // save context (core data)
         getStores()     // show store list in picker
+        
+        if itemToEdit != nil {          // check to see whether or not we're editing (a cell / details)
+            loadItemData()
+        }
     
     }
     
@@ -99,9 +104,22 @@ class ItemDetailsVC: UIViewController, UIPickerViewDataSource, UIPickerViewDeleg
     
     @IBAction func savePressed(_ sender: UIButton) {
 
-        // insert an entity into the NSManagedObjectContext
-        let item = Item(context: context)
+//        // insert an entity into the NSManagedObjectContext
+//        let item = Item(context: context)
+
+        // changing/updating for new edit-item feature
+        var item: Item!
         
+        if itemToEdit == nil {
+            
+            // THEN we create a new item (if not from edit)
+            item = Item(context: context)
+            
+        } else {
+            
+            // BUT if we did pass over an item...
+            item = itemToEdit
+        }
 
         // not adding to many checks here... (for example, you may want to make sure the user is entering numbers for the price field)
         
@@ -133,7 +151,59 @@ class ItemDetailsVC: UIViewController, UIPickerViewDataSource, UIPickerViewDeleg
         
     }
     
+    // edit details in existing cell
+    // created:  var itemToEdit
+    // added to viewDidLoad:  check if editing
+    func loadItemData() {
+        
+        if let item = itemToEdit {      // so we don't have to type 'itemToEdit' every time
+            
+            titleField.text = item.title
+            priceField.text = "\(item.price)"
+            detailsField.text = item.details
+            
+            // set picker to correct store
+            if let store = item.toStore {
+                
+                // loop to check
+                var index = 0
+                repeat {
+                    
+                    let s = stores[index]
+                    if s.name == store.name {
+                        
+                        // check to see if the name compares. if so, then we are going to set the row to that index
+                        storePicker.selectRow(index, inComponent: 0, animated: false)
+                        break
+                    }
+                    index += 1
+                    
+                } while (index < stores.count)
+            }
+        }
+        
+    }
 
+    @IBAction func deletePressed(_ sender: UIBarButtonItem) {
+        
+        // delete item
+        if itemToEdit != nil {
+            context.delete(itemToEdit!)
+            ad.saveContext()
+        }
+        
+        // pop back to the controller
+        _ = navigationController?.popViewController(animated: true)
+        
+        
+    }
+    
+    
+    
+    
+    
+    
+    
 
 }
 
