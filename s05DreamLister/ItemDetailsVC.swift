@@ -9,17 +9,20 @@
 import UIKit
 import CoreData
 
-class ItemDetailsVC: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
+class ItemDetailsVC: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     // add protocols:  UIPickerViewDataSource, UIPickerViewDelegate
+    // add for images:  UIImagePickerControllerDelegate, UINavigationControllerDelegate
     
     
     @IBOutlet weak var storePicker: UIPickerView!
     @IBOutlet weak var titleField: CustomTextField!
     @IBOutlet weak var priceField: CustomTextField!
     @IBOutlet weak var detailsField: CustomTextField!
+    @IBOutlet weak var thumbImage: UIImageView!
     
     var stores = [Store]()
     var itemToEdit: Item?
+    var imagePicker: UIImagePickerController!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,6 +35,10 @@ class ItemDetailsVC: UIViewController, UIPickerViewDataSource, UIPickerViewDeleg
         // set delegate & dataSource for pickerView
         storePicker.delegate = self
         storePicker.dataSource = self
+        
+        // set delegate
+        imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
         
         // create stores for stores array (test data)
         // entity type: Store
@@ -107,8 +114,9 @@ class ItemDetailsVC: UIViewController, UIPickerViewDataSource, UIPickerViewDeleg
 //        // insert an entity into the NSManagedObjectContext
 //        let item = Item(context: context)
 
-        // changing/updating for new edit-item feature
-        var item: Item!
+        var item: Item!     // changing/updating for new edit-item feature
+        let picture = Image(context: context)       // create image entity called 'picture'
+        picture.image = thumbImage.image        // assigning the image attribute of picture, to the image we have selected from the camera roll
         
         if itemToEdit == nil {
             
@@ -121,6 +129,10 @@ class ItemDetailsVC: UIViewController, UIPickerViewDataSource, UIPickerViewDeleg
             item = itemToEdit
         }
 
+        // save image - need to create image entity
+        // associate that image to our item
+        item.toImage = picture
+        
         // not adding to many checks here... (for example, you may want to make sure the user is entering numbers for the price field)
         
         // assign the details from the Title/Price/Details fields to the attributues of that item, then save that to the database
@@ -162,6 +174,9 @@ class ItemDetailsVC: UIViewController, UIPickerViewDataSource, UIPickerViewDeleg
             priceField.text = "\(item.price)"
             detailsField.text = item.details
             
+            // image
+            thumbImage.image = item.toImage?.image as? UIImage
+            
             // set picker to correct store
             if let store = item.toStore {
                 
@@ -184,6 +199,7 @@ class ItemDetailsVC: UIViewController, UIPickerViewDataSource, UIPickerViewDeleg
         
     }
 
+    // delete item
     @IBAction func deletePressed(_ sender: UIBarButtonItem) {
         
         // delete item
@@ -195,10 +211,28 @@ class ItemDetailsVC: UIViewController, UIPickerViewDataSource, UIPickerViewDeleg
         // pop back to the controller
         _ = navigationController?.popViewController(animated: true)
         
+    }
+    
+    // for images
+    @IBAction func addImage(_ sender: UIButton) {
+        
+        // when the image button is clicked, use camera roll to select images -- need to inform user with msg
+        // need to add into info.plist --> Privacy - Photo Library Usage Description
+        present(imagePicker, animated: true, completion: nil)
         
     }
     
-    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        
+        // need to extract actual image
+        if let img = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            
+            thumbImage.image = img
+        }
+        
+        // dismiss picker
+        imagePicker.dismiss(animated: true, completion: nil)
+    }
     
     
     
