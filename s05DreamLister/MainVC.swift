@@ -124,7 +124,25 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, NSFe
         // key 'created' - an Attribute within the Item Entity (see .xcdatamodeld file)
         let dateSort = NSSortDescriptor(key: "created", ascending: false)
         
-        fetchRequest.sortDescriptors = [dateSort]
+        // sort by price, title
+        let priceSort = NSSortDescriptor(key: "price", ascending: true)
+        let titleSort = NSSortDescriptor(key: "title", ascending: true)
+        
+        // check with sort segment is selected
+        if segment.selectedSegmentIndex == 0 {      // default is 0
+            
+            fetchRequest.sortDescriptors = [dateSort]
+            
+        } else if segment.selectedSegmentIndex == 1 {
+            
+            fetchRequest.sortDescriptors = [priceSort]
+            
+        } else if segment.selectedSegmentIndex == 2 {
+            
+            fetchRequest.sortDescriptors = [titleSort]  // NOTE: case sensitive, uppercase shows first
+        }
+        
+        
         
         // instatiate the fetchResultController
         // note:  create shortcuts in AppDelegate.swift file, for 'managedObjectContext' ("context" shortcut)
@@ -147,6 +165,13 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, NSFe
         }
         
     }
+    
+    @IBAction func segmentChange(_ sender: UISegmentedControl) {
+        
+        attemptFetch()
+        tableView.reloadData()
+    }
+    
     
     // whenever the tableView is about to update, this will start to listen for changes, & will handle that for you
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
