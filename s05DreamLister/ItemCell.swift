@@ -14,6 +14,7 @@ class ItemCell: UITableViewCell {
     @IBOutlet weak var title: UILabel!
     @IBOutlet weak var price: UILabel!
     @IBOutlet weak var details: UILabel!
+    @IBOutlet weak var itemType: UILabel!       // ~~~EXERCISE~~~
     
     // primary configure cell func
     func configureCell(item: Item) {
@@ -23,6 +24,13 @@ class ItemCell: UITableViewCell {
         details.text = item.details
         thumb.image = item.toImage?.image as? UIImage
         
+        if item.toItemType?.type != nil && item.toItemType?.type != "" {               // ~~~EXERCISE~~~
+            itemType.text = item.toItemType?.type
+        } else {
+            itemType.text = "Other"
+        }
     }
+    
+    
 
 }

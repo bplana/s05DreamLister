@@ -19,6 +19,7 @@ class ItemDetailsVC: UIViewController, UIPickerViewDataSource, UIPickerViewDeleg
     @IBOutlet weak var priceField: CustomTextField!
     @IBOutlet weak var detailsField: CustomTextField!
     @IBOutlet weak var thumbImage: UIImageView!
+    @IBOutlet weak var typeField: CustomTextField!      // ~~~EXERCISE~~~
     
     var stores = [Store]()
     var itemToEdit: Item?
@@ -118,6 +119,9 @@ class ItemDetailsVC: UIViewController, UIPickerViewDataSource, UIPickerViewDeleg
         let picture = Image(context: context)       // create image entity called 'picture'
         picture.image = thumbImage.image        // assigning the image attribute of picture, to the image we have selected from the camera roll
         
+        let itemType = ItemType(context: context)       // ~~~EXERCISE~~~
+        itemType.type = typeField.text      // ~~~EXERCISE~~~
+        
         if itemToEdit == nil {
             
             // THEN we create a new item (if not from edit)
@@ -148,6 +152,9 @@ class ItemDetailsVC: UIViewController, UIPickerViewDataSource, UIPickerViewDeleg
             item.details = details
         }
         
+        item.toItemType = itemType      // ~~~EXERCISE~~~
+
+        
         // assign store that was selected
         // ".toStore" -- check Relationship in Item Entity, in .xcdatamodeld file
         // inComponent = row, we just have 1 row, so "0"
@@ -173,6 +180,7 @@ class ItemDetailsVC: UIViewController, UIPickerViewDataSource, UIPickerViewDeleg
             titleField.text = item.title
             priceField.text = "\(item.price)"
             detailsField.text = item.details
+            typeField.text = item.toItemType?.type      // ~~~EXERCISE~~~
             
             // image
             thumbImage.image = item.toImage?.image as? UIImage
@@ -214,7 +222,7 @@ class ItemDetailsVC: UIViewController, UIPickerViewDataSource, UIPickerViewDeleg
     }
     
     // for images
-    @IBAction func addImage(_ sender: UIButton) {
+    func addImage(_ sender: UIButton) {
         
         // when the image button is clicked, use camera roll to select images -- need to inform user with msg
         // need to add into info.plist --> Privacy - Photo Library Usage Description

@@ -128,6 +128,9 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, NSFe
         let priceSort = NSSortDescriptor(key: "price", ascending: true)
         let titleSort = NSSortDescriptor(key: "title", ascending: true)
         
+        // ~~~EXERCISE~~~
+        let typeSort = NSSortDescriptor(key: "toItemType.type", ascending: true)
+        
         // check with sort segment is selected
         if segment.selectedSegmentIndex == 0 {      // default is 0
             
@@ -140,6 +143,10 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, NSFe
         } else if segment.selectedSegmentIndex == 2 {
             
             fetchRequest.sortDescriptors = [titleSort]  // NOTE: case sensitive, uppercase shows first
+        
+        } else if segment.selectedSegmentIndex == 3 {   // ~~~EXERCISE~~~
+            
+            fetchRequest.sortDescriptors = [typeSort]   // ~~~EXERCISE~~~
         }
         
         
@@ -234,16 +241,19 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, NSFe
         item.title = "MacBook Pro"
         item.price = 1800
         item.details = "I can't wait until the September event, I hope they release new MBPs."
+        item.toItemType?.type = "Electronics"
         
         let item2 = Item(context: context)
         item2.title = "Bose Headphones"
         item2.price = 300
         item2.details = "But man, it's so nice to be able to block out everyone with the noise-cancelling tech."
+        item.toItemType?.type = "Electronics"
         
         let item3 = Item(context: context)
         item3.title = "Tesla Model S"
         item3.price = 110000
         item3.details = "Oh man this is a beautiful car. And one day I will own it."
+        item.toItemType?.type = "Vehicles"
         
         ad.saveContext()
         
